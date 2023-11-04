@@ -7,7 +7,8 @@ const { body, validationResult } = require('express-validator');
 const router = express.Router();
 
 router.post('/register', [
-    body('username').notEmpty().withMessage('Username is required'),
+    body('firstName').notEmpty().withMessage('Name is required'),
+    body('lastName').notEmpty().withMessage('Surname is required'),
     body('email').isEmail().withMessage('Invalid email format'),
     body('password').isLength({ min: 3 }).withMessage('Password shoud be at least 3 charachters!')
 ], async (req, res) => {
@@ -16,14 +17,15 @@ router.post('/register', [
         return res.status(400).json({ errors: errors.array() });
     }
     
-    const { username, email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
 
     try {
         let user = await User.findOne({ email });
         if (user) return res.status(400).json({ message: 'User already exists'});
 
         user = new User({
-            username,
+            firstName,
+            lastName,
             email,
             password
         });
