@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
+const boatRoutes = require('./routes/boat');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/boat', boatRoutes);
 
 mongoose.connect(process.env.MONGODB_URI,{
     useNewUrlParser: true,
