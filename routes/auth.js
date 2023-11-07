@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
+const authenticate = require('../middleware/authenticate');
 
 const router = express.Router();
 
@@ -58,13 +59,13 @@ router.post('/login', async (req, res) => {
             maxAge: 3600000
         });
 
-        res.status(200).json({ token, userId: user._id });
+        res.status(200).json({ token });
     } catch(error) {
         res.status(500).json({ message: 'Server error' });
     }
 });
 
-router.post('/logout', async (req, res) => {
+router.post('/logout', authenticate, async (req, res) => {
     try{
         res.clearCookie('token');
 

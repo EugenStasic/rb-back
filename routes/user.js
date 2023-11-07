@@ -2,12 +2,13 @@ const express = require('express');
 const format = require('date-fns/format')
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
+const authenticate = require('../middleware/authenticate');
 
 const router = express.Router();
 
-router.get('/:userId', async (req, res) => {
+router.get('/me', authenticate, async (req, res) => {
     try {
-        const user = await User.findById(req.params.userId)
+        const user = await User.findById(req.user.userId)
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -21,7 +22,7 @@ router.get('/:userId', async (req, res) => {
 });
 
 
-router.patch('/:userId', [
+router.patch('/me', [
     body('dateOfBirth').optional().isISO8601().withMessage('Invalid date format'),
     body('gender').optional().isIn(['Male', 'Female', 'Other']),
     body('contact.phone').optional().isMobilePhone().withMessage('Invalid phone number'),
@@ -30,14 +31,14 @@ router.patch('/:userId', [
     body('contact.address.street').optional().notEmpty().withMessage('Street cannot be empty'),
     body('nauticalLevel').optional().isIn(['Beginner', 'Intermediate', 'Experienced', 'Pro']),
     body('yachtLicenseHolder').optional().isBoolean(),
-], async (req, res) => {
+], authenticate, async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array });
     }
 
     try {
-        const userId = req.params.userId;
+        const userId = req.user.userId;
         const updates = req.body;
 
         if (updates.profile && updates.profile.dateOfBirth) {
@@ -45,7 +46,7 @@ router.patch('/:userId', [
             updates.profile.dateOfBirth = formattedDate;
         }
 
-        const user = await User.findByIdAndUpdate(userId, {$set: updates }, { new: true, runValidators: true});
+        const user = await User.findByIdAndUpdate(userId, { $set: updates }, { new: true, runValidators: true });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
