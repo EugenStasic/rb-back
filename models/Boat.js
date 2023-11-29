@@ -103,7 +103,13 @@ const BoatSchema = new mongoose.Schema({
   extras: [{
     option: String,
     pricePerDay: Number
+  }],
+
+  images: [{
+    data: Buffer,
+    contentType: String
   }]
+
 });
 
 const Boat = mongoose.model('Boat', BoatSchema);
