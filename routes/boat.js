@@ -2,11 +2,11 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Boat = require('../models/Boat');
 const authenticate = require('../middleware/authenticate');
-const multerUploads = require('../middleware/multerMiddleware');
+const { uploadArray } = require('../middleware/multerMiddleware');
 
 const router = express.Router();
 
-router.post('/register', multerUploads, [
+router.post('/register', uploadArray, [
     body('data.generalInformation.type')
         .notEmpty()
         .isIn(['Motorboat', 'Sailboat', 'RIB', 'Catamaran', 'Jet-Ski', 'Yacht'])
@@ -158,7 +158,7 @@ router.patch('/user-boats/:boatId', [
     }
 });
 
-router.patch('/user-boats/:boatId/images', authenticate, multerUploads, async (req, res) => {
+router.patch('/user-boats/:boatId/images', authenticate, uploadArray, async (req, res) => {
     const { boatId } = req.params;
 
     try {

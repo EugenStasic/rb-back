@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema({
         nauticalLevel: { type: String, enum: ['Beginner', 'Intermediate', 'Experienced', 'Pro' ]},
         
         yachtLicenseHolder: { type: Boolean, default: false} 
+    },
+
+    profilePic: {
+        data: Buffer,
+        contentType: String,
     }
 
 }, { timestamps: true});
