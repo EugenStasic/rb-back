@@ -65,12 +65,14 @@ router.patch('/me', [
 router.get('/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
-        const user = await User.findById(userId).select('firstName');
+        const user = await User.findById(userId).select('firstName email profile.contact.phone');
         if (!user) {
             return res.status(404).json({ message: 'User not found'});
         };
         const publicProfile = {
-            firstName: user.firstName
+            firstName: user.firstName,
+            email: user.email,
+            phone: user.profile.contact.phone
         };
 
         res.status(200).json(publicProfile);

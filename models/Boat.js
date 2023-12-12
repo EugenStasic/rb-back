@@ -68,8 +68,16 @@ const BoatSchema = new mongoose.Schema({
     }]
   },
   booking: {
-    checkInTime: String,
-    checkOutTime: String,
+    checkInTime: {
+        type: String,
+        enum: ['06:00 AM', '07:00 AM', '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM'],
+        default: '06:00 AM'
+    },
+    checkOutTime: {
+        type: String,
+        enum: ['12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM'],
+        default: '12:00 PM'
+    },
     boatLicenseRequirement: {
       type: String,
       enum: ['Yes', 'No']
@@ -105,6 +113,19 @@ const BoatSchema = new mongoose.Schema({
     pricePerDay: Number
   }],
 
+  availability: [{
+    startDate: Date,
+    endDate: Date,
+    isBooked: { type: Boolean, default: false }
+}],
+  averageRating: {
+    type: Number,
+    default: 0
+  },
+  ratingsCount: {
+    type: Number,
+    default: 0
+  },
   images: [{
     data: Buffer,
     contentType: String

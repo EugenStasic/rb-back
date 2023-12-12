@@ -73,14 +73,13 @@ router.get('/user-boats', authenticate, async (req, res) => {
     }
 });
 
-router.get('/:boatId', authenticate, async (req, res) => {
+router.get('/:boatId', async (req, res) => {
     try {
         const boatId = req.params.boatId;
         const boat = await Boat.findById(boatId)
-
-        if (boat.ownerId.toString() !== req.user.userId) {
-            return res.status(403).json({ message: 'User is not authorized to edit boat information' });
-        };
+        if (!boat) {
+            return res.status(404).json({ message: 'Boat not found' });
+        }
 
         res.status(200).json(boat);
     } catch (error) {

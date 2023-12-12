@@ -8,6 +8,8 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const boatRoutes = require('./routes/boat');
 const searchRoutes = require('./routes/search');
+const bookingRoutes = require('./routes/booking');
+const reviewRoutes = require('./routes/review');
 
 const app = express();
 
@@ -21,6 +23,8 @@ app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/boat', boatRoutes);
 app.use('/search', searchRoutes)
+app.use('/bookings', bookingRoutes);
+app.use('/review', reviewRoutes);
 
 mongoose.connect(process.env.MONGODB_URI,{
     useNewUrlParser: true,
