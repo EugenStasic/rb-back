@@ -39,4 +39,14 @@ router.get('/check-review/:boatId', authenticate, async (req, res) => {
     }
 });
 
+router.get('/:boatId', async (req, res) => {
+    try {
+        const { boatId } = req.params;
+        const reviews = await Review.find({ boatId }).populate('userId', 'firstName lastName profilePic');
+        res.json(reviews);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
 module.exports = router;
