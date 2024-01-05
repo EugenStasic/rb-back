@@ -17,6 +17,26 @@ function buildQuery(params) {
     if (params.location) {
         query['generalInformation.cityHarbour.city'] = params.location;
     }
+    if (params.type) {
+        query['generalInformation.type'] = params.type;
+    }
+    if (params.engineType) {
+        query['technicalInformation.engineType'] = params.engineType;
+    }
+    if (params['yearOfConstruction.min'] !== undefined && params['yearOfConstruction.max'] !== undefined) {
+        query['technicalInformation.yearOfConstruction'] = { $gte: Number(params['yearOfConstruction.min']), $lte: Number(params['yearOfConstruction.max']) };
+    }
+    if (params['availability.startDate'] && params['availability.endDate']) {
+        query['availability'] = { 
+            $not: {
+                $elemMatch: { 
+                    startDate: { $lte: new Date(params['availability.endDate']) },
+                    endDate: { $gte: new Date(params['availability.startDate']) },
+                    isBooked: true
+                }
+            }
+        };
+    }
 
     return query;
 };

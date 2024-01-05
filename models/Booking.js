@@ -57,7 +57,7 @@ BookingSchema.virtual('currentStatus').get(function () {
     if (this.status === 'Cancelled') {
         return 'Cancelled';
     } else if (today >= this.startDate && today <= this.endDate) {
-        return 'Active';
+        return 'Ongoing';
     } else if (today > this.endDate) {
         return 'Completed';
     } else {
